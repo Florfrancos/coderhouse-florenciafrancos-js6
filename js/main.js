@@ -15,7 +15,8 @@ const textoMenu =
     "8 - Compra prioritaria\n" +
     "9 - Entregar primera remera del carrito\n" +
     "10 - Cambiar una remera del carrito por otro color\n" +
-    "11 - Salir";
+    "11 - Filtrar por precio \n" +
+    "12 - Salir";
 
 // Clase que modela una remera de la tienda
     class Producto {
@@ -177,6 +178,31 @@ function reemplazarRemera(lista, productos) {
 
     mostrarMensaje("Cambiaste la remera " + colorViejo + " por una " + productoNuevo.color);
 }
+//filtra productos por precio. 
+function filtrar(productos) {
+    let precioMenor = Number(prompt("¿Productos menores a qué precio?"));
+    let precioMayor = Number(prompt("¿Productos mayores a qué precio?"));
+    let productosfiltrados = productos.filter((remera) => remera.precio < precioMenor && remera.precio > precioMayor);
+
+    if (productosfiltrados.length === 0) {
+        mostrarMensaje("No hay remeras en ese rango de precios");
+        return;
+    }
+
+    let productosPorPrecio = productosfiltrados.map((remera) => remera.color).join(", ");
+    mostrarMensaje("Tenemos estas remeras: " + productosPorPrecio);
+
+    let elegirColor = prompt("¿Qué remera querés agregar?").toLowerCase().trim();
+    let productoElegido = productosfiltrados.find((remera) => remera.color.toLowerCase() === elegirColor);
+
+    if (!productoElegido) {
+        mostrarMensaje("Esa remera no está en la lista");
+        return;
+    }
+
+    procesarCompra(productoElegido);
+}
+
 
 //Menú principal con switch por casos, dependiendo la opcion seleccionada. 
 function opcionCompra(mensaje) {
@@ -215,12 +241,15 @@ function opcionCompra(mensaje) {
                 reemplazarRemera(carrito, productos);
                 break;
             case 11:
+                filtrar(productos);
+                break;
+            case 12:
                 mostrarMensaje("Saliendo...");
                 break;
             default:
-                mostrarMensaje("Opción inválida, elegí un número del 1 al 11");
+                mostrarMensaje("Opción inválida, elegí un número del 1 al 12");
         }
-    } while (opcion !== 11);
+    } while (opcion !== 12);
 
     mostrarCarrito(carrito);
     mostrarMensaje("Gracias por visitarnos");
